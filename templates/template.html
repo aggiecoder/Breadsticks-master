@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <title>Google Calendar API</title>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <p>Google Calendar API</p>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="get-button">Get Events</button>
+
+    <form id="create"  action = "/create_event"  name = "create" method="post" role="form">
+      <h2 class="form-signin-heading">Please Create an Event</h2>
+      <input type = "text" name="summary" class="form-control" placeholder="Summary" required autofocus>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" id = "create-button">Create Event </button>
+  </form>
+
+  <form id="get_event" name = "get_event" role="form">
+    <h2 class="form-signin-heading">Request event</h2>
+    <input type = "text" name="eventId" id="eventId" class="form-control" placeholder="eventId is needed here" required autofocus>
+    <button class="btn btn-lg btn-primary btn-block"  type = "submit" id = "get-specific-button" >Get Event </button>
+</form>
+
+<form id="edit_event" name = "edit_event" role="form">
+  <h2 class="form-signin-heading">Edit Event</h2>
+  <input type = "text" name="eventId" id="eventId" class="form-control" placeholder="eventId is needed here" required autofocus>
+  <input type = "text" name="summary" id="summary" class="form-control" placeholder="New Summary" required autofocus>
+  <button class="btn btn-lg btn-primary btn-block"  type = "submit" id = "edit event" >Edit Event </button>
+</form>
+
+    <script>
+    $(document).ready(function(){
+    $("#get-button").click(function(){
+      $.ajax({
+        type: "GET",
+        url: "/getall",
+        datatype:"json",
+        success: function(data){
+          for(var i = 0; i < data.items.length; i++)
+          alert(data.items[i].summary);
+        },
+        error: function(request, status, error){
+          console.log("Error:" + error);
+        }
+      });
+    });
+    $("#get_event").on('submit', function(event){
+
+      $.ajax({
+        type: "POST",
+        url: "/get_event",
+        data: $('#get_event').serialize(),
+        success: function(data){
+          alert(data.summary);
+        },
+        error: function(request, status, error){
+          console.log("Error:" + error);
+        }
+      });
+      event.preventDefault();
+    });
+    $("#edit_event").on('submit', function(event){
+
+      $.ajax({
+        type: "POST",
+        url: "/edit_event",
+        data: $('#edit_event').serialize(),
+        success: function(data){
+          alert(data.summary);
+        },
+        error: function(request, status, error){
+          console.log("Error:" + error);
+        }
+      });
+      event.preventDefault();
+    });
+  });
+    </script>
+  </body>
+</html>
